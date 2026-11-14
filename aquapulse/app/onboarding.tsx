@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ export default function Onboarding() {
   const update = useApp((st) => st.updateSettings);
   const start = useApp((st) => st.startReminders);
   const health = useApp((st) => st.health);
+  const router = useRouter();
 
   const [name, setName] = useState('');
   const [wake, setWake] = useState(s.weekday.wakeUp);
@@ -33,6 +35,7 @@ export default function Onboarding() {
     await update({ name: name.trim(), weekday: sch, weekend: sch, measurementUnit: unit, dailyTarget: ml, reminderInterval: interval });
     await start(); // asks for notification permission
     await update({ onboarded: true });
+    router.replace('/');
   };
 
   return (

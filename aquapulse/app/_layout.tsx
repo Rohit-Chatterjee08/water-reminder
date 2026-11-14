@@ -1,8 +1,8 @@
 import * as Notifications from 'expo-notifications';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, AppState, View } from 'react-native';
+import { ActivityIndicator, AppState, ScrollView, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { registerTopUp } from '@/services/backgroundTopUp';
 import { clearDelivered, configureNotifications, setupCategories, ACTION_DRANK, ACTION_SNOOZE_10, ACTION_SNOOZE_15 } from '@/services/notifications';
@@ -24,10 +24,7 @@ function handleResponse(r: Notifications.NotificationResponse | null) {
 export default function RootLayout() {
   const t = useTheme();
   const hydrated = useApp((s) => s.hydrated);
-  const onboarded = useApp((s) => s.settings.onboarded);
   const theme = useApp((s) => s.settings.theme);
-  const router = useRouter();
-  const segments = useSegments();
 
   // one-time setup once persisted state is loaded
   useEffect(() => {
@@ -37,6 +34,8 @@ export default function RootLayout() {
       registerTopUp();
       // action tapped while the app was killed
       handleResponse(await Notifications.getLastNotificationResponseAsync());
+    }).catch(() => {
+      // notification setup failed; the Home screen shows the health banner instead of crashing
     });
     const sub = Notifications.addNotificationResponseReceivedListener(handleResponse);
     const appSub = AppState.addEventListener('change', (s) => {
@@ -48,13 +47,6 @@ export default function RootLayout() {
     return () => { sub.remove(); appSub.remove(); };
   }, [hydrated]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-    const inOnboarding = segments[0] === 'onboarding';
-    if (!onboarded && !inOnboarding) router.replace('/onboarding');
-    if (onboarded && inOnboarding) router.replace('/');
-  }, [hydrated, onboarded, segments]);
-
   if (!hydrated) {
     return <View style={{ flex: 1, justifyContent: 'center', backgroundColor: t.bg }}><ActivityIndicator color={t.primary} /></View>;
   }
@@ -63,5 +55,17 @@ export default function RootLayout() {
       <StatusBar style={theme === 'dark' ? 'light' : 'auto'} />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }} />
     </SafeAreaProvider>
+  );
+}
+
+/** Shows the real error instead of a blank screen if something fails at runtime. */
+export function ErrorBoundary({ error, retry }: { error: Error; retry: () => Promise<void> }) {
+  return (
+    <ScrollView contentContainerStyle={{ padding: 24, paddingTop: 80 }} style={{ backgroundColor: '#fff' }}>
+      <Text style={{ fontSize: 20, fontWeight: '800', color: '#12324A' }}>AquaPulse hit a problem</Text>
+      <Text selectable style={{ marginTop: 12, color: '#D9534F' }}>{String(error?.message ?? error)}</Text>
+      <Text selectable style={{ marginTop: 12, color: '#6B8499', fontSize: 11 }}>{String(error?.stack ?? '').slice(0, 1500)}</Text>
+      <Text onPress={retry} style={{ marginTop: 20, color: '#4A9FE0', fontWeight: '700', fontSize: 16 }}>Try again</Text>
+    </ScrollView>
   );
 }

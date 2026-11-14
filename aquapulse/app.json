@@ -16,20 +16,26 @@
         "POST_NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE"
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#4A9FE0"
+      }
     },
     "plugins": [
       "expo-router",
       [
         "expo-notifications",
         {
-          "color": "#4A9FE0"
+          "color": "#4A9FE0",
+          "icon": "./assets/notification-icon.png"
         }
       ],
       "expo-background-task"
     ],
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "icon": "./assets/icon.png"
   }
 }

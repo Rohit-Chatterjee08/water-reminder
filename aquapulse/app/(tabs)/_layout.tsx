@@ -1,7 +1,8 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useApp } from '@/store/useApp';
 import { AddSheet, useAddSheet } from '@/ui/addSheet';
 import { useTheme } from '@/ui/theme';
 
@@ -11,6 +12,8 @@ export default function TabsLayout() {
   const t = useTheme();
   const show = useAddSheet((s) => s.show);
   const insets = useSafeAreaInsets();
+  const onboarded = useApp((st) => st.settings.onboarded);
+  if (!onboarded) return <Redirect href="/onboarding" />;
   return (
     <>
       <Tabs
