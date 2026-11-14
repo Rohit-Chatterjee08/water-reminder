@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, AppState, ScrollView, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { registerTopUp } from '@/services/backgroundTopUp';
 import { clearDelivered, configureNotifications, setupCategories, ACTION_DRANK, ACTION_SNOOZE_10, ACTION_SNOOZE_15 } from '@/services/notifications';
 import { useApp } from '@/store/useApp';
 import { useTheme } from '@/ui/theme';
@@ -31,7 +30,6 @@ export default function RootLayout() {
     if (!hydrated) return;
     setupCategories().then(async () => {
       await useApp.getState().refresh();
-      registerTopUp();
       // action tapped while the app was killed
       handleResponse(await Notifications.getLastNotificationResponseAsync());
     }).catch(() => {

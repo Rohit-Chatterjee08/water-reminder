@@ -31,7 +31,8 @@
           "icon": "./assets/notification-icon.png"
         }
       ],
-      "expo-background-task"
+      "expo-asset",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": false
