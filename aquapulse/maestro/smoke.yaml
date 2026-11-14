@@ -1,0 +1,20 @@
+appId: com.aquapulse.app
+---
+- launchApp:
+    clearState: true
+- tapOn: "Start reminders"
+- tapOn: "Allow"
+    optional: true
+- assertVisible: "Stay hydrated"
+- assertVisible: "Active"
+- tapOn: "Add water"
+- tapOn: "250 ml"
+- assertVisible: "250 ml"
+- tapOn: "Pause"
+- assertVisible: "Paused"
+- tapOn: "Resume"
+- assertVisible: "Active"
+- tapOn: "Settings"
+- tapOn: "15 min"
+- tapOn: "Home"
+- assertVisible: "every 15 min"

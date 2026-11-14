@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "AquaPulse",
+    "slug": "aquapulse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "aquapulse",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.aquapulse.app"
+    },
+    "android": {
+      "package": "com.aquapulse.app",
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "color": "#4A9FE0"
+        }
+      ],
+      "expo-background-task"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
