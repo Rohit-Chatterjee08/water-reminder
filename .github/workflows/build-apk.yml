@@ -1,0 +1,36 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: aquapulse
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: aquapulse/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npm test
+      - run: npx expo prebuild --platform android --no-install
+      - name: Build release APK
+        working-directory: aquapulse/android
+        run: ./gradlew assembleRelease --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aquapulse-apk
+          path: aquapulse/android/app/build/outputs/apk/release/app-release.apk
