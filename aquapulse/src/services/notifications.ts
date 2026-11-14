@@ -162,3 +162,14 @@ export async function cancelSnoozes() {
 export async function clearDelivered() {
   await Notifications.dismissAllNotificationsAsync();
 }
+
+/** Sends a reminder in ~10 seconds so users can confirm notifications work on their phone. */
+export async function sendTest(s: UserSettings) {
+  if (!(await permissionGranted())) throw new Error('Notifications are blocked in system settings.');
+  const channelId = await ensureChannel(s);
+  await Notifications.scheduleNotificationAsync({
+    identifier: `test-${Date.now()}`,
+    content: content(s, { test: true }),
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 10, channelId },
+  });
+}

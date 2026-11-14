@@ -15,7 +15,9 @@
       "permissions": [
         "POST_NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED",
-        "VIBRATE"
+        "VIBRATE",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

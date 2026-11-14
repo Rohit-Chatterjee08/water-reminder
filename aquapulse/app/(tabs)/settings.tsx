@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { validateSchedule } from '@/core/schedule';
 import { fromMl, toMl } from '@/core/stats';
 import { DaySchedule, Tone, Unit } from '@/core/types';
+import { sendTest } from '@/services/notifications';
 import { useApp } from '@/store/useApp';
 import { Banner, Btn, Card, Chip, Field } from '@/ui/components';
 import { useTheme } from '@/ui/theme';
@@ -111,6 +112,19 @@ export default function Settings() {
         </Card>
 
         <Card>
+          <Btn
+            label="Send test reminder (in 10 seconds)"
+            kind="soft"
+            onPress={async () => {
+              try {
+                await sendTest(s);
+                Alert.alert('Test scheduled', 'Close the app or lock the screen. A reminder should arrive in about 10 seconds.');
+              } catch (e) {
+                Alert.alert('Could not send test', (e as Error).message);
+              }
+            }}
+          />
+          <View style={{ height: 8 }} />
           <Text style={{ color: t.sub, marginBottom: 10 }}>Your data stays on this device. Nothing is uploaded.</Text>
           <Btn label="Export data (JSON)" kind="soft" onPress={exportData} />
           <View style={{ height: 8 }} />
